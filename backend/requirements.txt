@@ -9,3 +9,5 @@ PyJWT
 pwdlib[argon2]
 python-multipart
 pytesseract
+Pillow
+openpyxl
