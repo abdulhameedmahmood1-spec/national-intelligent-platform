@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>National Intelligent Platform</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+            background: #f1f5f9;
+            color: #17202a;
+        }
+
+        header {
+            background: #17202a;
+            color: white;
+            padding: 18px 24px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        header p {
+            margin: 5px 0 0;
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 25px auto;
+            padding: 0 16px 50px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns:
+                minmax(0, 1fr)
+                minmax(0, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow:
+                0 2px 8px rgba(0, 0, 0, .06);
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        h3 {
+            margin-bottom: 8px;
+        }
+
+        .muted {
+            color: #64748b;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px dashed #94a3b8;
+            border-radius: 9px;
+            background: #f8fafc;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            border: 0;
+            border-radius: 9px;
+            background: #17202a;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #263545;
+        }
+
+        button.secondary {
+            background: #475569;
+        }
+
+        button.success {
+            background: #166534;
+        }
+
+        button.warning {
+            background: #92400e;
+        }
+
+        .camera-box {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 10px;
+            margin-top: 12px;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+            max-height: 350px;
+            object-fit: cover;
+            background: #020617;
+        }
+
+        .preview {
+            width: 100%;
+            max-height: 350px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin-top: 12px;
+            background: #0f172a;
+        }
+
+        .status {
+            margin-top: 15px;
+            padding: 18px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 25px;
+            font-weight: bold;
+            background: #e2e8f0;
+        }
+
+        .allow {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .check {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .not-found {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .ready {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .row:last-child {
+            border-bottom: 0;
+        }
+
+        .row strong {
+            color: #334155;
+        }
+
+        .row span {
+            text-align: right;
+            overflow-wrap: anywhere;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .found-banner {
+            padding: 14px;
+            border-radius: 9px;
+            background: #dcfce7;
+            color: #166534;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .notfound-banner {
+            padding: 14px;
+            border-radius: 9px;
+            background: #fee2e2;
+            color: #991b1b;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .ocr-info {
+            margin-top: 12px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+        }
+
+        .history-table th {
+            background: #f8fafc;
+        }
+
+        .history-scroll {
+            overflow-x: auto;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .pill.allow {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .pill.check {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .manual-box {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: #f8fafc;
+        }
+
+        .divider {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .small {
+            font-size: 13px;
+        }
+
+        @media (max-width: 750px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+
+            header {
+                padding: 15px;
+            }
+
+            main {
+                margin-top: 15px;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .row {
+                flex-direction: column;
+                gap: 4px;
+            }
+
+            .row span {
+                text-align: left;
+            }
+
+            .history-table th,
+            .history-table td {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>National Intelligent Platform</h1>
+    <p>Vehicle identification, owner verification and gate history</p>
+</header>
+
+<main>
+
+    <div class="grid">
+
+        <!-- IDENTIFICATION -->
+        <section class="card">
+
+            <h2>Vehicle Identification</h2>
+
+            <p class="muted">
+                Take a photograph of the vehicle plate or upload an
+                existing image. The system will read the plate and
+                search the vehicle database.
+            </p>
+
+            <label for="plateImage">
+                Plate / Vehicle Image
+            </label>
+
+            <input
+                id="plateImage"
+                type="file"
+                accept="image/*"
+                capture="environment"
+                onchange="previewImage()"
+            >
+
+            <img
+                id="imagePreview"
+                class="preview hidden"
+                alt="Plate preview"
+            >
+
+            <button
+                id="photoButton"
+                onclick="checkPhoto()"
+            >
+                📷 Read Plate From Photo
+            </button>
+
+            <hr class="divider">
+
+            <h3>Manual Plate Search</h3>
+
+            <label for="plate">
+                Plate Number
+            </label>
+
+            <input
+                id="plate"
+                type="text"
+                placeholder="e.g. GATE123"
+                autocomplete="off"
+                onkeydown="handlePlateKey(event)"
+            >
+
+            <button
+                onclick="checkManual()"
+                class="secondary"
+            >
+                Search Database
+            </button>
+
+            <div
+                id="status"
+                class="status ready"
+            >
+                READY
+            </div>
+
+            <div
+                id="ocrInfo"
+                class="ocr-info hidden"
+            >
+                <strong>OCR Information</strong>
+
+                <div class="row">
+                    <strong>Detected Plate</strong>
+                    <span id="detectedPlate"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Confidence</strong>
+                    <span id="confidence"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Raw OCR</strong>
+                    <span id="rawOcr"></span>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- RESULT -->
+        <section
+            id="resultCard"
+            class="card"
+        >
+
+            <h2>Verification Result</h2>
+
+            <div
+                id="resultMessage"
+                class="muted"
+            >
+                No vehicle checked yet.
+            </div>
+
+            <div
+                id="vehicleDetails"
+                class="hidden"
+            >
+
+                <div class="found-banner">
+                    ✓ VEHICLE FOUND IN DATABASE
+                </div>
+
+                <h3>Vehicle Information</h3>
+
+                <div class="row">
+                    <strong>Plate</strong>
+                    <span id="plateValue"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Registration</strong>
+                    <span id="registration"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Chassis</strong>
+                    <span id="chassis"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Type</strong>
+                    <span id="vehicleType"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Make</strong>
+                    <span id="make"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Model</strong>
+                    <span id="model"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Colour</strong>
+                    <span id="color"></span>
+                </div>
+
+                <h3>Owner Information</h3>
+
+                <div class="row">
+                    <strong>NIN</strong>
+                    <span id="nin"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Phone</strong>
+                    <span id="phone"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Department</strong>
+                    <span id="department"></span>
+                </div>
+
+                <div class="row">
+                    <strong>Address</strong>
+                    <span id="address"></span>
+                </div>
+
+            </div>
+
+            <div
+                id="notFoundDetails"
+                class="hidden"
+            >
+                <div class="notfound-banner">
+                    ⚠ VEHICLE NOT FOUND
+                </div>
+
+                <p>
+                    The plate was read successfully, but no matching
+                    vehicle was found in the database.
+                </p>
+
+                <p class="muted">
+                    Verify the plate number and try a manual search.
+                </p>
+            </div>
+
+            <div
+                id="ocrFailedDetails"
+                class="hidden"
+            >
+                <div class="notfound-banner">
+                    ⚠ PLATE COULD NOT BE READ
+                </div>
+
+                <p>
+                    The image could not be read reliably.
+                </p>
+
+                <p>
+                    Type the plate number manually below and search
+                    the database.
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- GATE EVENT -->
+        <section
+            id="eventCard"
+            class="card hidden"
+        >
+
+            <h2>Gate Event</h2>
+
+            <div class="row">
+                <strong>Event ID</strong>
+                <span id="eventId"></span>
+            </div>
+
+            <div class="row">
+                <strong>Decision</strong>
+                <span id="decision"></span>
+            </div>
+
+            <div class="row">
+                <strong>Vehicle Found</strong>
+                <span id="vehicleFound"></span>
+            </div>
+
+            <div class="row">
+                <strong>Detected Plate</strong>
+                <span id="eventPlate"></span>
+            </div>
+
+        </section>
+
+
+        <!-- HISTORY -->
+        <section
+            id="historyCard"
+            class="card full hidden"
+        >
+
+            <h2>Vehicle Gate History</h2>
+
+            <p class="muted">
+                Previous checks recorded for this plate.
+            </p>
+
+            <div class="history-scroll">
+
+                <table class="history-table">
+
+                    <thead>
+                        <tr>
+                            <th>Date / Time</th>
+                            <th>Plate</th>
+                            <th>Decision</th>
+                            <th>Reason</th>
+                            <th>OCR Confidence</th>
+                            <th>Hardware</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="historyBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- MANUAL FALLBACK -->
+        <section
+            class="card full"
+        >
+
+            <h2>Manual Fallback</h2>
+
+            <div class="manual-box">
+
+                <strong>
+                    If the camera image is unclear:
+                </strong>
+
+                <p class="muted small">
+                    Type the plate number into the manual search
+                    field above. The system will use the same database
+                    and history lookup.
+                </p>
+
+                <p class="muted small">
+                    Example:
+                    <strong>GATE123</strong>
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<script>
+
+const API_BASE = "http://127.0.0.1:8000";
+
+
+function setStatus(
+    message,
+    type = "ready"
+) {
+    const status =
+        document.getElementById("status");
+
+    status.textContent = message;
+
+    status.className =
+        "status " + type;
+}
+
+
+function previewImage() {
+
+    const input =
+        document.getElementById("plateImage");
+
+    const preview =
+        document.getElementById("imagePreview");
+
+    if (!input.files || !input.files[0]) {
+        preview.classList.add("hidden");
+        preview.src = "";
+        return;
+    }
+
+    const file = input.files[0];
+
+    preview.src =
+        URL.createObjectURL(file);
+
+    preview.classList.remove("hidden");
+}
+
+
+function handlePlateKey(event) {
+
+    if (event.key === "Enter") {
+        checkManual();
+    }
+}
+
+
+function resetResults() {
+
+    document
+        .getElementById("vehicleDetails")
+        .classList.add("hidden");
+
+    document
+        .getElementById("notFoundDetails")
+        .classList.add("hidden");
+
+    document
+        .getElementById("ocrFailedDetails")
+        .classList.add("hidden");
+
+    document
+        .getElementById("eventCard")
+        .classList.add("hidden");
+
+    document
+        .getElementById("historyCard")
+        .classList.add("hidden");
+
+    document
+        .getElementById("ocrInfo")
+        .classList.add("hidden");
+}
+
+
+async function checkManual() {
+
+    const input =
+        document.getElementById("plate");
+
+    const plate =
+        input.value.trim();
+
+    if (!plate) {
+        alert("Enter a plate number.");
+        input.focus();
+        return;
+    }
+
+    resetResults();
+
+    setStatus(
+        "CHECKING...",
+        "check"
+    );
+
+    document
+        .getElementById("resultMessage")
+        .textContent =
+        "Searching the vehicle database...";
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/gate/check?plate_number=" +
+                encodeURIComponent(plate),
+                {
+                    method: "POST"
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.detail ||
+                "Vehicle check failed"
+            );
+        }
+
+        showResult(data);
+
+    } catch (error) {
+
+        console.error(error);
+
+        setStatus(
+            "ERROR",
+            "not-found"
+        );
+
+        document
+            .getElementById("resultMessage")
+            .textContent =
+            error.message ||
+            "Could not connect to the server.";
+    }
+}
+
+
+async function checkPhoto() {
+
+    const input =
+        document.getElementById("plateImage");
+
+    if (
+        !input.files ||
+        !input.files[0]
+    ) {
+        alert(
+            "Take a photo or select a plate image first."
+        );
+
+        return;
+    }
+
+    resetResults();
+
+    setStatus(
+        "READING PLATE...",
+        "check"
+    );
+
+    document
+        .getElementById("resultMessage")
+        .textContent =
+        "Processing image and searching database...";
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        "file",
+        input.files[0]
+    );
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/gate/photo-check",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.detail ||
+                "Photo check failed"
+            );
+        }
+
+        if (
+            data.status ===
+            "OCR_FAILED"
+        ) {
+
+            showOCRFailed(data);
+
+            return;
+        }
+
+        if (data.detected_plate) {
+
+            document
+                .getElementById("plate")
+                .value =
+                data.detected_plate;
+        }
+
+        showOCRInfo(data);
+
+        showResult(data);
+
+    } catch (error) {
+
+        console.error(error);
+
+        setStatus(
+            "ERROR",
+            "not-found"
+        );
+
+        document
+            .getElementById("resultMessage")
+            .textContent =
+            error.message ||
+            "Could not process the image.";
+    }
+}
+
+
+function showOCRInfo(data) {
+
+    const info =
+        document.getElementById("ocrInfo");
+
+    info.classList.remove("hidden");
+
+    document
+        .getElementById("detectedPlate")
+        .textContent =
+        data.detected_plate ||
+        "Not detected";
+
+    document
+        .getElementById("confidence")
+        .textContent =
+        data.plate_confidence != null
+            ? Math.round(
+                data.plate_confidence * 100
+              ) + "%"
+            : "N/A";
+
+    document
+        .getElementById("rawOcr")
+        .textContent =
+        data.ocr_raw_text ||
+        "N/A";
+}
+
+
+function showOCRFailed(data) {
+
+    setStatus(
+        "PLATE NOT READ",
+        "not-found"
+    );
+
+    document
+        .getElementById("resultMessage")
+        .textContent =
+        data.message ||
+        "The plate could not be read.";
+
+    document
+        .getElementById("ocrFailedDetails")
+        .classList.remove("hidden");
+}
+
+
+function showResult(data) {
+
+    const found =
+        data.vehicle_found &&
+        data.vehicle;
+
+    document
+        .getElementById("eventCard")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("eventId")
+        .textContent =
+        data.gate_event_id ||
+        "";
+
+    document
+        .getElementById("decision")
+        .textContent =
+        data.status ||
+        "";
+
+    document
+        .getElementById("vehicleFound")
+        .textContent =
+        found ? "YES" : "NO";
+
+    document
+        .getElementById("eventPlate")
+        .textContent =
+        data.detected_plate ||
+        "";
+
+    if (found) {
+
+        setStatus(
+            "VEHICLE FOUND",
+            "allow"
+        );
+
+        document
+            .getElementById("resultMessage")
+            .textContent =
+            "Registered vehicle found.";
+
+        document
+            .getElementById("vehicleDetails")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("notFoundDetails")
+            .classList.add("hidden");
+
+        const vehicle =
+            data.vehicle;
+
+        document
+            .getElementById("plateValue")
+            .textContent =
+            vehicle.plate_number ||
+            "";
+
+        document
+            .getElementById("registration")
+            .textContent =
+            vehicle.registration_number ||
+            "";
+
+        document
+            .getElementById("chassis")
+            .textContent =
+            vehicle.chassis_number ||
+            "";
+
+        document
+            .getElementById("vehicleType")
+            .textContent =
+            vehicle.vehicle_type ||
+            "";
+
+        document
+            .getElementById("make")
+            .textContent =
+            vehicle.make ||
+            "";
+
+        document
+            .getElementById("model")
+            .textContent =
+            vehicle.model ||
+            "";
+
+        document
+            .getElementById("color")
+            .textContent =
+            vehicle.color ||
+            "";
+
+        document
+            .getElementById("nin")
+            .textContent =
+            vehicle.owner_nin_number ||
+            "";
+
+        document
+            .getElementById("phone")
+            .textContent =
+            vehicle.phone_number ||
+            "";
+
+        document
+            .getElementById("department")
+            .textContent =
+            vehicle.owner_department ||
+            "";
+
+        document
+            .getElementById("address")
+            .textContent =
+            vehicle.owner_address ||
+            "";
+
+    } else {
+
+        setStatus(
+            "NOT FOUND",
+            "not-found"
+        );
+
+        document
+            .getElementById("resultMessage")
+            .textContent =
+            "No matching vehicle was found in the database.";
+
+        document
+            .getElementById("vehicleDetails")
+            .classList.add("hidden");
+
+        document
+            .getElementById("notFoundDetails")
+            .classList.remove("hidden");
+    }
+
+    if (data.detected_plate) {
+
+        document
+            .getElementById("plate")
+            .value =
+            data.detected_plate;
+    }
+
+    if (data.detected_plate) {
+
+        loadHistory(
+            data.detected_plate
+        );
+    }
+}
+
+
+async function loadHistory(
+    plate
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                API_BASE +
+                "/gate/history?plate_number=" +
+                encodeURIComponent(plate)
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.detail ||
+                "History lookup failed"
+            );
+        }
+
+        renderHistory(data);
+
+    } catch (error) {
+
+        console.error(
+            "History error:",
+            error
+        );
+    }
+}
+
+
+function renderHistory(data) {
+
+    const card =
+        document.getElementById(
+            "historyCard"
+        );
+
+    const body =
+        document.getElementById(
+            "historyBody"
+        );
+
+    body.innerHTML = "";
+
+    if (
+        !data.history ||
+        data.history.length === 0
+    ) {
+
+        body.innerHTML =
+            "<tr>" +
+            "<td colspan='6'>" +
+            "No previous gate history." +
+            "</td>" +
+            "</tr>";
+
+        card.classList.remove("hidden");
+
+        return;
+    }
+
+    for (
+        const event of data.history
+    ) {
+
+        const row =
+            document.createElement("tr");
+
+        const date =
+            event.detected_at
+                ? new Date(
+                    event.detected_at
+                  ).toLocaleString()
+                : "";
+
+        const confidence =
+            event.plate_confidence != null
+                ? Math.round(
+                    event.plate_confidence * 100
+                  ) + "%"
+                : "N/A";
+
+        const decision =
+            event.decision ||
+            "";
+
+        const pillClass =
+            decision === "ALLOW"
+                ? "allow"
+                : "check";
+
+        row.innerHTML =
+            "<td>" +
+            escapeHtml(date) +
+            "</td>" +
+
+            "<td>" +
+            escapeHtml(
+                event.detected_plate_number || ""
+            ) +
+            "</td>" +
+
+            "<td>" +
+            "<span class='pill " +
+            pillClass +
+            "'>" +
+            escapeHtml(decision) +
+            "</span>" +
+            "</td>" +
+
+            "<td>" +
+            escapeHtml(
+                event.decision_reason || ""
+            ) +
+            "</td>" +
+
+            "<td>" +
+            escapeHtml(confidence) +
+            "</td>" +
+
+            "<td>" +
+            escapeHtml(
+                event.hardware_status || ""
+            ) +
+            "</td>";
+
+        body.appendChild(row);
+    }
+
+    card.classList.remove("hidden");
+}
+
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+</script>
+
+</body>
+</html>

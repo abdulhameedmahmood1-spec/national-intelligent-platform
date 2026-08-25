@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Gate</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #17202a;
+        }
+
+        header {
+            background: #17202a;
+            color: white;
+            padding: 20px 30px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        header p {
+            margin: 6px 0 0;
+            color: #cbd5e1;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,.08);
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+
+        button {
+            margin-top: 12px;
+            width: 100%;
+            padding: 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #17202a;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #263545;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+            background: #e5e7eb;
+        }
+
+        .allow {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .check {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 9px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .row:last-child {
+            border-bottom: 0;
+        }
+
+        .muted {
+            color: #64748b;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 700px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>Organization Gate</h1>
+    <p>Vehicle verification and gate decision system</p>
+</header>
+
+<main>
+    <div class="grid">
+
+        <section class="card">
+            <h2>Vehicle Check</h2>
+
+            <label for="plate">Plate Number</label>
+            <input
+                id="plate"
+                type="text"
+                placeholder="e.g. GATE123"
+                autocomplete="off"
+            >
+
+            <button onclick="checkVehicle()">Check Vehicle</button>
+
+            <div id="status" class="status">
+                READY
+            </div>
+        </section>
+
+        <section id="vehicleCard" class="card hidden">
+            <h2>Vehicle Information</h2>
+
+            <div class="row">
+                <strong>Plate</strong>
+                <span id="plateValue"></span>
+            </div>
+
+            <div class="row">
+                <strong>Registration</strong>
+                <span id="registration"></span>
+            </div>
+
+            <div class="row">
+                <strong>Chassis</strong>
+                <span id="chassis"></span>
+            </div>
+
+            <div class="row">
+                <strong>Type</strong>
+                <span id="vehicleType"></span>
+            </div>
+
+            <div class="row">
+                <strong>Make</strong>
+                <span id="make"></span>
+            </div>
+
+            <div class="row">
+                <strong>Model</strong>
+                <span id="model"></span>
+            </div>
+
+            <div class="row">
+                <strong>Color</strong>
+                <span id="color"></span>
+            </div>
+        </section>
+
+        <section id="ownerCard" class="card hidden">
+            <h2>Owner Information</h2>
+
+            <div class="row">
+                <strong>Phone</strong>
+                <span id="phone"></span>
+            </div>
+
+            <div class="row">
+                <strong>Department</strong>
+                <span id="department"></span>
+            </div>
+
+            <div class="row">
+                <strong>Address</strong>
+                <span id="address"></span>
+            </div>
+        </section>
+
+        <section id="eventCard" class="card hidden">
+            <h2>Gate Event</h2>
+
+            <div class="row">
+                <strong>Event ID</strong>
+                <span id="eventId"></span>
+            </div>
+
+            <div class="row">
+                <strong>Decision</strong>
+                <span id="decision"></span>
+            </div>
+
+            <div class="row">
+                <strong>Vehicle Found</strong>
+                <span id="vehicleFound"></span>
+            </div>
+        </section>
+
+        <section class="card full">
+            <h2>Camera</h2>
+            <p class="muted">
+                Live camera integration will be connected after the
+                verification dashboard is complete.
+            </p>
+        </section>
+
+    </div>
+</main>
+
+<script>
+async function checkVehicle() {
+    const plate = document.getElementById("plate").value.trim();
+
+    if (!plate) {
+        alert("Enter a plate number.");
+        return;
+    }
+
+    const status = document.getElementById("status");
+
+    status.className = "status";
+    status.textContent = "CHECKING...";
+
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/gate/check?plate_number=" +
+            encodeURIComponent(plate),
+            {
+                method: "POST"
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Gate check failed");
+        }
+
+        showResult(data);
+
+    } catch (error) {
+        status.className = "status check";
+        status.textContent = "ERROR";
+        console.error(error);
+    }
+}
+
+function showResult(data) {
+    const status = document.getElementById("status");
+
+    status.textContent = data.status;
+    status.className =
+        data.status === "ALLOW"
+            ? "status allow"
+            : "status check";
+
+    document.getElementById("eventCard").classList.remove("hidden");
+
+    document.getElementById("eventId").textContent =
+        data.gate_event_id;
+
+    document.getElementById("decision").textContent =
+        data.status;
+
+    document.getElementById("vehicleFound").textContent =
+        data.vehicle_found ? "YES" : "NO";
+
+    if (data.vehicle_found && data.vehicle) {
+        const vehicle = data.vehicle;
+
+        document.getElementById("vehicleCard")
+            .classList.remove("hidden");
+
+        document.getElementById("ownerCard")
+            .classList.remove("hidden");
+
+        document.getElementById("plateValue").textContent =
+            vehicle.plate_number || "";
+
+        document.getElementById("registration").textContent =
+            vehicle.registration_number || "";
+
+        document.getElementById("chassis").textContent =
+            vehicle.chassis_number || "";
+
+        document.getElementById("vehicleType").textContent =
+            vehicle.vehicle_type || "";
+
+        document.getElementById("make").textContent =
+            vehicle.make || "";
+
+        document.getElementById("model").textContent =
+            vehicle.model || "";
+
+        document.getElementById("color").textContent =
+            vehicle.color || "";
+
+        document.getElementById("phone").textContent =
+            vehicle.phone_number || "";
+
+        document.getElementById("department").textContent =
+            vehicle.owner_department || "";
+
+        document.getElementById("address").textContent =
+            vehicle.owner_address || "";
+    } else {
+        document.getElementById("vehicleCard")
+            .classList.add("hidden");
+
+        document.getElementById("ownerCard")
+            .classList.add("hidden");
+    }
+}
+</script>
+
+</body>
+</html>
