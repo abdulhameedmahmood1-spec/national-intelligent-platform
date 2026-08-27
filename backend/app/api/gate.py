@@ -845,11 +845,17 @@ async def photo_check(
 
         return result
 
-    except Exception as exc:
-        raise HTTPException(
-            status_code=400,
-            detail=f"Could not process the image: {exc}",
-        )
+ except Exception as exc:
+    import traceback
+
+    print("========== PHOTO OCR ERROR ==========")
+    traceback.print_exc()
+    print("=====================================")
+
+    raise HTTPException(
+        status_code=400,
+        detail=f"Could not process the image: {exc}",
+    )
 
 
 @router.get("/history")
