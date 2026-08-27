@@ -973,14 +973,34 @@ async function login() {
             }
         );
 
-        const data = await response.json();
+const response = await fetch(
+    API_BASE + "/auth/login",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData.toString(),
+    }
+);
 
-        if (!response.ok) {
-            throw new Error(
-                data.detail ||
-                "Login failed."
-            );
-        }
+const raw = await response.text();
+
+let data;
+
+try {
+    data = JSON.parse(raw);
+} catch {
+    throw new Error(
+        `Server returned HTTP ${response.status}: ${raw.substring(0, 500)}`
+    );
+}
+
+if (!response.ok) {
+    throw new Error(
+        data.detail || "Login failed."
+    );
+}
 
         authToken = data.access_token;
 
