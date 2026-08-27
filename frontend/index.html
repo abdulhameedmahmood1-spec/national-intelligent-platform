@@ -961,18 +961,6 @@ async function login() {
     formData.append("password", password);
 
     try {
-        const response = await fetch(
-            API_BASE + "/auth/login",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type":
-                        "application/x-www-form-urlencoded",
-                },
-                body: formData.toString(),
-            }
-        );
-
 const response = await fetch(
     API_BASE + "/auth/login",
     {
@@ -1002,8 +990,17 @@ if (!response.ok) {
     );
 }
 
-        authToken = data.access_token;
+authToken = data.access_token;
 
+localStorage.setItem(
+    "nip_access_token",
+    authToken
+);
+
+status.className = "status allow";
+status.textContent =
+    "LOGGED IN AS " +
+    (data.user?.username || username);
         localStorage.setItem(
             "nip_access_token",
             authToken
