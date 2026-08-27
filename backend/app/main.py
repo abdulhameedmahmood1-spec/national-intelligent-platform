@@ -1,4 +1,6 @@
+from pathlib import Path
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from backend.app.api.auth import router as auth_router
@@ -21,6 +23,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+FRONTEND_FILE = (
+    Path(__file__).resolve().parents[2]
+    / "frontend"
+    / "index.html"
+)
+
+@app.get("/", include_in_schema=False)
+def frontend():
+    return FileResponse(FRONTEND_FILE)
 
 app.include_router(auth_router)
 app.include_router(gate_router)
