@@ -440,6 +440,33 @@
 </header>
 
 <main>
+    <section class="card full" id="loginCard">
+    <h2>Login</h2>
+
+    <label for="username">Username</label>
+    <input
+        id="username"
+        type="text"
+        placeholder="Enter username"
+        autocomplete="username"
+    >
+
+    <label for="password" style="margin-top:12px;">
+        Password
+    </label>
+    <input
+        id="password"
+        type="password"
+        placeholder="Enter password"
+        autocomplete="current-password"
+    >
+
+    <button onclick="login()">Login</button>
+
+    <div id="loginStatus" class="status ready">
+        NOT LOGGED IN
+    </div>
+</section>
 
     <div class="grid">
 
@@ -886,6 +913,100 @@
 <script>
 
 const API_BASE = "";
+    let authToken = localStorage.getItem("nip_access_token");
+
+function authHeaders() {
+    return authToken
+        ? {
+              Authorization: "Bearer " + authToken,
+          }
+        : {};
+}
+
+function requireLogin() {
+    if (!authToken) {
+        alert("Please log in first.");
+        document.getElementById("loginCard").scrollIntoView({
+            behavior: "smooth",
+        });
+        return false;
+    }
+
+    return true;
+}
+
+async function login() {
+    const username =
+        document.getElementById("username").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const status =
+        document.getElementById("loginStatus");
+
+    if (!username || !password) {
+        status.className = "status not-found";
+        status.textContent =
+            "ENTER USERNAME AND PASSWORD";
+        return;
+    }
+
+    status.className = "status check";
+    status.textContent = "LOGGING IN...";
+
+    const formData = new URLSearchParams();
+
+    formData.append("username", username);
+    formData.append("password", password);
+
+    try {
+        const response = await fetch(
+            API_BASE + "/auth/login",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded",
+                },
+                body: formData.toString(),
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.detail ||
+                "Login failed."
+            );
+        }
+
+        authToken = data.access_token;
+
+        localStorage.setItem(
+            "nip_access_token",
+            authToken
+        );
+
+        status.className = "status allow";
+        status.textContent =
+            "LOGGED IN AS " +
+            (data.user?.username || username);
+
+    } catch (error) {
+        console.error(error);
+
+        authToken = null;
+        localStorage.removeItem(
+            "nip_access_token"
+        );
+
+        status.className = "status not-found";
+        status.textContent =
+            error.message || "LOGIN FAILED";
+    }
+}
 
 async function downloadVehicleTemplate() {
 
@@ -1011,14 +1132,17 @@ async function uploadVehicleExcel() {
 
     try {
 
-        const response =
-            await fetch(
-                API_BASE + "/vehicles/import",
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
+const response =
+    await fetch(
+        API_BASE + "/vehicles/import",
+        {
+            method: "POST",
+            headers: {
+                ...authHeaders()
+            },
+            body: formData
+        }
+    );
 
         const data =
             await response.json();
@@ -1201,6 +1325,10 @@ function resetResults() {
 
 async function checkManual() {
 
+    if (!requireLogin()) {
+        return;
+    }
+
     const input =
         document.getElementById("plate");
 
@@ -1232,9 +1360,12 @@ async function checkManual() {
                 API_BASE +
                 "/gate/check?plate_number=" +
                 encodeURIComponent(plate),
-                {
-                    method: "POST"
-                }
+              {
+    method: "POST",
+    headers: {
+        ...authHeaders()
+    }
+}
             );
 
         const data =
@@ -1305,15 +1436,18 @@ async function checkPhoto() {
 
     try {
 
-        const response =
-            await fetch(
-                API_BASE +
-                "/gate/photo-check",
-                {
-                    method: "POST",
-                    body: formData
-                }
-            );
+    const response =
+    await fetch(
+        API_BASE +
+        "/gate/photo-check",
+        {
+            method: "POST",
+            headers: {
+                ...authHeaders()
+            },
+            body: formData
+        }
+    );
 
         const data =
             await response.json();
@@ -1724,12 +1858,18 @@ async function loadHistory(
 
     try {
 
-        const response =
-            await fetch(
-                API_BASE +
-                "/gate/history?plate_number=" +
-                encodeURIComponent(plate)
-            );
+const response =
+    await fetch(
+        API_BASE +
+        "/gate/history?plate_number=" +
+        encodeURIComponent(plate),
+        {
+            method: "GET",
+            headers: {
+                ...authHeaders()
+            }
+        }
+    );
 
         const data =
             await response.json();
